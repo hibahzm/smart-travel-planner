@@ -24,4 +24,4 @@ ENV PYTHONPATH=/app
 
 EXPOSE 8000
 
-CMD ["sh", "-c", "alembic upgrade head && uvicorn src.main:app --host 0.0.0.0 --port $PORT"]
+CMD ["sh", "-c", "cd /app && uv run alembic upgrade head && uv run uvicorn src.main:app --host 0.0.0.0 --port $PORT"]
