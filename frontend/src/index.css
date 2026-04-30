@@ -1,0 +1,84 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply border-surface-200;
+  }
+  body {
+    @apply bg-surface-950 text-slate-100 font-sans antialiased;
+  }
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-surface-900;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-surface-800 rounded-full;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-primary-700;
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-surface-900/80 backdrop-blur-sm border border-surface-800 rounded-2xl;
+  }
+  .btn-primary {
+    @apply bg-primary-600 hover:bg-primary-500 text-white font-semibold px-5 py-2.5 rounded-xl
+           transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed
+           active:scale-95 shadow-lg shadow-primary-900/20;
+  }
+  .btn-ghost {
+    @apply hover:bg-surface-800 text-slate-400 hover:text-slate-200 px-3 py-2 rounded-xl
+           transition-all duration-150;
+  }
+  .input-field {
+    @apply w-full bg-surface-800 border border-surface-700 rounded-xl px-4 py-3
+           text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2
+           focus:ring-primary-500 focus:border-transparent transition-all duration-150;
+  }
+  .prose-travel {
+    @apply text-slate-300 leading-relaxed;
+  }
+  .prose-travel h2 {
+    @apply text-slate-100 font-semibold text-lg mt-6 mb-2 flex items-center gap-2;
+  }
+  .prose-travel h3 {
+    @apply text-primary-400 font-medium text-base mt-4 mb-1;
+  }
+  .prose-travel ul {
+    @apply list-disc list-inside space-y-1 ml-2;
+  }
+  .prose-travel strong {
+    @apply text-slate-100 font-semibold;
+  }
+  .prose-travel table {
+    @apply w-full text-sm border-collapse my-3;
+  }
+  .prose-travel th {
+    @apply bg-surface-800 text-slate-300 font-medium px-3 py-2 text-left border border-surface-700;
+  }
+  .prose-travel td {
+    @apply px-3 py-2 border border-surface-800 text-slate-400;
+  }
+  .prose-travel blockquote {
+    @apply border-l-4 border-primary-600 pl-4 italic text-slate-400 my-3;
+  }
+}
+
+/* Typing dots animation */
+.typing-dot {
+  @apply w-1.5 h-1.5 bg-primary-400 rounded-full;
+  animation: bounce 1.2s ease-in-out infinite;
+}
+.typing-dot:nth-child(2) { animation-delay: 0.2s; }
+.typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes bounce {
+  0%, 80%, 100% { transform: scale(0.8); opacity: 0.4; }
+  40% { transform: scale(1.2); opacity: 1; }
+}
