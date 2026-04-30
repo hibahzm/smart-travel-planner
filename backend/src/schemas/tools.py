@@ -37,24 +37,27 @@ class ClassifierInput(BaseModel):
     """
     Input for the ML-classifier tool.
 
-    Features are the same numeric columns the model was trained on.
+    Features are the same 15 numeric columns the model was trained on.
     The agent must supply realistic estimates; the model returns the
-    predicted travel style with confidence.
+    predicted travel style with per-class confidence scores.
     """
 
     destination: str = Field(min_length=2, max_length=100)
     avg_temp_july: float = Field(ge=-30, le=50, description="Average July temp °C")
     cost_per_day_usd: float = Field(ge=0, le=2000, description="Estimated daily budget in USD")
     crowd_index: float = Field(ge=1, le=10, description="Tourist crowd level (1=empty, 10=overrun)")
-    hiking_score: float = Field(ge=0, le=10)
-    beach_score: float = Field(ge=0, le=10)
-    cultural_sites: int = Field(ge=0, le=30, description="Count of major cultural sites")
-    safety_score: float = Field(ge=0, le=10)
-    english_score: float = Field(ge=0, le=10)
-    nature_score: float = Field(ge=0, le=10)
-    nightlife_score: float = Field(ge=0, le=10)
-    family_amenities: float = Field(ge=0, le=10)
-    luxury_hotels: int = Field(ge=0, le=50, description="Count of 5-star hotels")
+    hiking_score: float = Field(ge=0, le=10, description="Trail quality and terrain variety 0-10")
+    beach_score: float = Field(ge=0, le=10, description="Beach and water quality 0-10")
+    cultural_sites: int = Field(ge=0, le=30, description="Count of UNESCO + major museums + historic districts")
+    safety_score: float = Field(ge=0, le=10, description="Composite safety (crime, stability, health) 0-10")
+    english_score: float = Field(ge=0, le=10, description="Ease of independent travel in English 0-10")
+    nature_score: float = Field(ge=0, le=10, description="Wildlife, forests, national-park quality 0-10")
+    nightlife_score: float = Field(ge=0, le=10, description="Bar/club/live-music scene 0-10")
+    family_amenities: float = Field(ge=0, le=10, description="Kid-friendliness: parks, menus, strollers 0-10")
+    luxury_hotels: int = Field(ge=0, le=50, description="Count of rated 5-star properties")
+    food_scene_score: float = Field(ge=0, le=10, description="Cuisine diversity, street-food and fine-dining quality 0-10")
+    infrastructure_score: float = Field(ge=0, le=10, description="Transport, internet speed, hospital access 0-10")
+    wellness_score: float = Field(ge=0, le=10, description="Spas, yoga retreats, thermal baths, health tourism 0-10")
 
 
 # ── Live Conditions Tool ──────────────────────────────────────────────────────

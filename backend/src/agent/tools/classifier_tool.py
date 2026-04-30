@@ -32,6 +32,9 @@ FEATURE_COLUMNS = [
     "nightlife_score",
     "family_amenities",
     "luxury_hotels",
+    "food_scene_score",
+    "infrastructure_score",
+    "wellness_score",
 ]
 
 
@@ -49,6 +52,9 @@ async def classify_destination_style(
     nightlife_score: float,
     family_amenities: float,
     luxury_hotels: int,
+    food_scene_score: float,
+    infrastructure_score: float,
+    wellness_score: float,
 ) -> str:
     """
     Classify a destination's travel style using the trained ML pipeline.
@@ -61,15 +67,18 @@ async def classify_destination_style(
         avg_temp_july: Average July temperature in °C.
         cost_per_day_usd: Estimated daily budget in USD.
         crowd_index: Tourist crowd level 1–10.
-        hiking_score: Hiking quality 0–10.
-        beach_score: Beach quality 0–10.
-        cultural_sites: Count of major cultural sites.
-        safety_score: Safety level 0–10.
-        english_score: English friendliness 0–10.
-        nature_score: Nature/wildlife quality 0–10.
-        nightlife_score: Nightlife quality 0–10.
-        family_amenities: Family-friendliness 0–10.
-        luxury_hotels: Count of 5-star hotels.
+        hiking_score: Trail quality and terrain variety 0–10.
+        beach_score: Beach and water quality 0–10.
+        cultural_sites: Count of UNESCO + major museums + historic districts.
+        safety_score: Composite safety score 0–10.
+        english_score: Ease of independent travel in English 0–10.
+        nature_score: Wildlife, forests, national-park quality 0–10.
+        nightlife_score: Bar/club/live-music scene 0–10.
+        family_amenities: Kid-friendliness 0–10.
+        luxury_hotels: Count of rated 5-star properties.
+        food_scene_score: Cuisine diversity and fine-dining quality 0–10.
+        infrastructure_score: Transport, internet, hospital access 0–10.
+        wellness_score: Spas, yoga retreats, health tourism 0–10.
     """
     try:
         validated = ClassifierInput(
@@ -86,6 +95,9 @@ async def classify_destination_style(
             nightlife_score=nightlife_score,
             family_amenities=family_amenities,
             luxury_hotels=luxury_hotels,
+            food_scene_score=food_scene_score,
+            infrastructure_score=infrastructure_score,
+            wellness_score=wellness_score,
         )
 
         clf = get_ml_classifier()
@@ -104,6 +116,9 @@ async def classify_destination_style(
             validated.nightlife_score,
             validated.family_amenities,
             validated.luxury_hotels,
+            validated.food_scene_score,
+            validated.infrastructure_score,
+            validated.wellness_score,
         ]])
 
         pred_encoded = clf.predict(features)[0]

@@ -37,6 +37,7 @@ logger = structlog.get_logger(__name__)
 DOCUMENTS_DIR = Path(__file__).parent / "documents"
 
 DESTINATION_MAP = {
+    # Original 12 (already in DB)
     "bali": "Bali, Indonesia",
     "kyoto": "Kyoto, Japan",
     "patagonia": "Patagonia",
@@ -49,22 +50,54 @@ DESTINATION_MAP = {
     "kenya": "Kenya",
     "colombia": "Colombia",
     "new_zealand": "New Zealand",
+    # New 18 (need ingestion)
+    "tokyo": "Tokyo, Japan",
+    "dubai": "Dubai, UAE",
+    "paris": "Paris, France",
+    "rome": "Rome, Italy",
+    "thailand_bangkok": "Bangkok, Thailand",
+    "costa_rica": "Costa Rica",
+    "istanbul": "Istanbul, Turkey",
+    "singapore": "Singapore",
+    "maldives": "Maldives",
+    "rajasthan": "Rajasthan, India",
+    "jordan": "Jordan",
+    "zanzibar": "Zanzibar, Tanzania",
+    "barcelona": "Barcelona, Spain",
+    "argentina_buenos_aires": "Buenos Aires, Argentina",
+    "switzerland": "Switzerland",
+    "south_africa": "South Africa",
+    "sri_lanka": "Sri Lanka",
+    "mexico": "Mexico",
+}
+
+# Stems already ingested in the database — skip when running with --new-only
+ALREADY_INGESTED = {
+    "bali", "kyoto", "patagonia", "iceland", "morocco",
+    "vietnam", "peru", "portugal", "georgia", "kenya",
+    "colombia", "new_zealand",
 }
 
 
 async def main():
+    import sys as _sys
     import src.core.lifespan as ls
+
+    new_only = "--new-only" in _sys.argv
 
     await create_engine()
 
-    # Manually init the OpenAI client (normally done in lifespan)
     ls._openai_client = AsyncOpenAI(api_key=settings.OPENAI_API_KEY)
 
     session_factory = get_session_factory()
 
     docs = []
+    skipped = 0
     for txt_file in sorted(DOCUMENTS_DIR.glob("*.txt")):
         stem = txt_file.stem.lower()
+        if new_only and stem in ALREADY_INGESTED:
+            skipped += 1
+            continue
         destination = DESTINATION_MAP.get(stem, stem.replace("_", " ").title())
         content = txt_file.read_text(encoding="utf-8")
         docs.append(RawDocument(
@@ -73,6 +106,9 @@ async def main():
             content=content,
         ))
         logger.info("loaded_document", destination=destination, chars=len(content))
+
+    if new_only:
+        logger.info("new_only_mode", skipped=skipped)
 
     logger.info("starting_ingest", documents=len(docs))
     async with session_factory() as db:
